@@ -1,5 +1,5 @@
 export interface PacketProps {
-    buffer: Uint8Array;
+    buffer?: Uint8Array;
 }
 
 export default class Packet {
@@ -13,7 +13,7 @@ export default class Packet {
     }
     
     constructor(
-        {buffer}: PacketProps
+        {buffer}: PacketProps = {}
     ) {
         this.buffer = new DataView((buffer ?? new Uint8Array(Packet.MAX_PACKET_SIZE)).buffer);
     }
