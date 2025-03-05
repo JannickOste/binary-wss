@@ -30,7 +30,7 @@ export default class Packet {
         this.offset++;
     }
     
-    public writeBoolean(value: boolean): void {
+    protected writeBoolean(value: boolean): void {
         this.buffer.setUint8(this.offset, value ? 1 : 0);
         this.offset++;
     }
@@ -41,4 +41,32 @@ export default class Packet {
 
         return value === 1;
     }
+
+    protected writeString(value: string): void {
+        const encoder = new TextEncoder();
+        const encoded = encoder.encode(value);
+
+        this.buffer.setUint8(this.offset, encoded.length);
+        this.offset++;
+
+        for (const byte of encoded) {
+            this.buffer.setUint8(this.offset, byte);
+            this.offset++;
+        }
+    }
+
+    public readString(): string {
+        const length = this.buffer.getUint8(this.offset);
+        this.offset++;
+
+        const bytes = new Uint8Array(length);
+        for (let i = 0; i < length; i++) {
+            bytes[i] = this.buffer.getUint8(this.offset);
+            this.offset++;
+        }
+
+        const decoder = new TextDecoder();
+        return decoder.decode(bytes);
+    }
+
 }
