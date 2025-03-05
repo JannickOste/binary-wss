@@ -69,4 +69,12 @@ export default class Packet {
         return decoder.decode(bytes);
     }
 
+    public write(numeric: number): void;
+    public write(bool: boolean): void;
+    public write(str: string): void;
+    public write(value: number | boolean | string): void {
+        if (typeof value === 'number') return this.writeNumber(value);
+        if (typeof value === 'boolean') return this.writeBoolean(value);
+        if (typeof value === 'string') return this.writeString(value);
+    }
 }
