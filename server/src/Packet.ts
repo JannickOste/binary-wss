@@ -27,7 +27,7 @@ export default class Packet {
 
     protected writeNumber(value: number): void {
         this.buffer.setFloat32(this.offset, value);
-        this.offset++;
+        this.offset += 4;
     }
     
     protected writeBoolean(value: boolean): void {
