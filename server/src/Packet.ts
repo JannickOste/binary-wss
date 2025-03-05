@@ -29,4 +29,16 @@ export default class Packet {
         this.buffer.setFloat32(this.offset, value);
         this.offset++;
     }
+    
+    public writeBoolean(value: boolean): void {
+        this.buffer.setUint8(this.offset, value ? 1 : 0);
+        this.offset++;
+    }
+
+    public readBoolean(): boolean {
+        const value = this.buffer.getUint8(this.offset);
+        this.offset++;
+
+        return value === 1;
+    }
 }
