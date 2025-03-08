@@ -1,8 +1,11 @@
 {
   "dependencies": {
+    "glob": "^11.0.1",
+    "inversify": "^7.0.2",
     "ws": "^8.18.1"
   },
   "devDependencies": {
+    "@types/inversify": "^2.0.32",
     "@types/ws": "^8.18.0"
   }
 }

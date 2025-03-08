@@ -1,5 +1,6 @@
 export interface PacketProps {
     buffer?: Uint8Array;
+    id?: number;
 }
 
 export default class Packet {
@@ -13,26 +14,51 @@ export default class Packet {
     }
     
     constructor(
-        {buffer}: PacketProps = {}
+        {buffer, id}: PacketProps = {}
     ) {
         this.buffer = new DataView((buffer ?? new Uint8Array(Packet.MAX_PACKET_SIZE)).buffer);
+
+        if(id)
+        {
+            this.writeFloat32(id);
+        }
+    }
+
+    public writeByte(value: number): void 
+    {
+        this.buffer.setInt8(this.offset, value);
+        this.offset++;
+    }
+
+    public writeShort(value: number): void {
+        this.buffer.setInt16(this.offset, value, Packet.LITTLE_ENDIAN)
+        this.offset += 2;
+    }
+
+    public writeInt(value: number): void {
+        this.buffer.setInt32(this.offset, value, Packet.LITTLE_ENDIAN);
+        this.offset += 4;
+    }
+
+    public writeFloat32(value: number): void {
+        this.buffer.setFloat32(this.offset, value, Packet.LITTLE_ENDIAN);
+        this.offset += 4;
+    }
+
+    public writeFloat64(value: number): void {
+        this.buffer.setFloat64(this.offset, value, Packet.LITTLE_ENDIAN)
+    }
+    
+    public writeBoolean(value: boolean): void {
+        this.buffer.setUint8(this.offset, value ? 1 : 0);
+        this.offset++;
     }
 
     public readNumber(): number {
-        const value = this.buffer.getFloat32(this.offset);
+        const value = this.buffer.getFloat32(this.offset, Packet.LITTLE_ENDIAN);
         this.offset += 4;
 
         return value;
-    }
-
-    protected writeNumber(value: number): void {
-        this.buffer.setFloat32(this.offset, value);
-        this.offset += 4;
-    }
-    
-    protected writeBoolean(value: boolean): void {
-        this.buffer.setUint8(this.offset, value ? 1 : 0);
-        this.offset++;
     }
 
     public readBoolean(): boolean {
@@ -42,7 +68,7 @@ export default class Packet {
         return value === 1;
     }
 
-    protected writeString(value: string): void {
+    public writeString(value: string): void {
         const encoder = new TextEncoder();
         const encoded = encoder.encode(value);
 
@@ -73,7 +99,7 @@ export default class Packet {
     public write(bool: boolean): void;
     public write(str: string): void;
     public write(value: number | boolean | string): void {
-        if (typeof value === 'number') return this.writeNumber(value);
+        if (typeof value === 'number') return this.writeFloat32(value);
         if (typeof value === 'boolean') return this.writeBoolean(value);
         if (typeof value === 'string') return this.writeString(value);
     }
