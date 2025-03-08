@@ -21,10 +21,15 @@ export default class Packet {
         {
             this.writeFloat32(id);
         }
+
     }
 
     public writeByte(value: number): void 
     {
+        if (this.offset + 1 > Packet.MAX_PACKET_SIZE) {
+            throw new Error("Packet size exceeds the maximum allowed size");
+        }
+
         this.dataview.setInt8(this.offset, value);
         this.offset++;
     }
@@ -73,7 +78,7 @@ export default class Packet {
         return value;
     }
 
-    public readNumber = (littleEndian?: boolean) => this.readFloat32(littleEndian);
+    public readNumber = (littleEndian: boolean = true) => this.readFloat32(littleEndian);
 
     public writeFloat64(value: number, littleEndian: boolean = true): void {
         this.dataview.setFloat64(this.offset, value, littleEndian);
