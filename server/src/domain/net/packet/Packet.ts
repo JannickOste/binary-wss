@@ -101,8 +101,7 @@ export default class Packet {
         const encoder = new TextEncoder();
         const encoded = encoder.encode(value);
 
-        this.dataview.setUint8(this.offset, encoded.length);
-        this.offset++;
+        this.writeInt(encoded.length);
 
         for (const byte of encoded) {
             this.dataview.setUint8(this.offset, byte);
@@ -111,8 +110,7 @@ export default class Packet {
     }
 
     public readString(): string {
-        const length = this.dataview.getUint8(this.offset);
-        this.offset++;
+        const length = this.readInt();
 
         const bytes = new Uint8Array(length);
         for (let i = 0; i < length; i++) {
