@@ -8,7 +8,7 @@ export default class Kernel
     public async init(): Promise<void> 
     {
         console.log("Loading dependencies...")
-        for(const file of globSync(`src/**/*.${__filename.endsWith("ts") ? "ts" : "js"}`, {absolute: true}))
+        for(const file of globSync(`{src,dist}/**/*.${__filename.endsWith("ts") ? "ts" : "js"}`, {absolute: true}))
         {
             const _ = require(file)
         }

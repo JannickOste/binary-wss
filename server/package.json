@@ -4,6 +4,11 @@
     "inversify": "^7.0.2",
     "ws": "^8.18.1"
   },
+  "scripts": {
+    "start": "node dist",
+    "start:dev": "ts-node src",
+    "publish": "tsc"
+  },
   "devDependencies": {
     "@types/inversify": "^2.0.32",
     "@types/ws": "^8.18.0"

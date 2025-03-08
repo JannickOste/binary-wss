@@ -26,11 +26,10 @@ export default class Server implements IServer {
 
     private onClientConnect(socket: WebSocket): void {
         socket.binaryType = 'arraybuffer';
-
         const client = new Client(this.lastId++, socket);
 
         this.clients.set(socket, client);
-
+        
         socket.on('message', this.onPacketReceive.bind(this, socket));
         socket.on('close', this.onClientDisconnect.bind(this, socket));
 
@@ -56,7 +55,7 @@ export default class Server implements IServer {
 
     public async listen(): Promise<void>
     {
-        this.server = new WebSocket.Server({ port: this.PORT });
+        this.server = new WebSocket.Server({ port: this.PORT, maxPayload: Packet.MAX_PACKET_SIZE, });
         this.server.on('connection', this.onClientConnect.bind(this));
     }
 
