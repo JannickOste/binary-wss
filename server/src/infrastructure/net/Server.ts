@@ -14,6 +14,9 @@ import provide from '../../domain/decorators/provide';
 export default class Server implements IServer {
     private server: WebSocket.Server | undefined;
     private readonly clients: Map<WebSocket, Client> = new Map();
+    private readonly clientPacketHandlerMap: Map<number, IClientPacketHandler> = new Map();
+    private readonly serverPacketHandlerMap: Map<number, IServerPacketHandler> = new Map();
+    
     
     private lastId = 0;
 
@@ -22,6 +25,9 @@ export default class Server implements IServer {
         @multiInject(types.Core.Domain.Net.Packet.IClientPacketHandler) private readonly clientPacketHandlers: IClientPacketHandler[],
         @multiInject(types.Core.Domain.Net.Packet.IServerPacketHandler) private readonly serverPacketHandlers: IServerPacketHandler[],
     ) {
+        this.clientPacketHandlers.forEach(handler => this.clientPacketHandlerMap.set(handler.id, handler));
+        this.serverPacketHandlers.forEach(handler => this.serverPacketHandlerMap.set(handler.id, handler));
+
     }
 
     private onClientConnect(socket: WebSocket): void {
@@ -33,14 +39,14 @@ export default class Server implements IServer {
         socket.on('message', this.onPacketReceive.bind(this, socket));
         socket.on('close', this.onClientDisconnect.bind(this, socket));
 
-        this.serverPacketHandlers.find(v => v.id === ServerPacket.HANDSHAKE)?.handle(client);
+        this.serverPacketHandlerMap.get(ServerPacket.HANDSHAKE)?.handle(client);
     }
 
     private onPacketReceive(socket: WebSocket, data: WebSocket.Data): void {
         const packet = new Packet({ buffer: new Uint8Array(data as ArrayBuffer) });
         const id = packet.readNumber();
 
-        const packetHandler = this.clientPacketHandlers.find(v => v.id === id);
+        const packetHandler = this.clientPacketHandlerMap.get(id);
         if (packetHandler) {
             packetHandler.handle(this.clients.get(socket)!, packet);
             return;
