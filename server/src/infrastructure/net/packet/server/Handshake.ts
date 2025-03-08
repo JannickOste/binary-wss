@@ -17,8 +17,8 @@ export default class Handshake implements IServerPacketHandler {
         const payload = new Packet({id: ClientPacket.HANDSHAKE});
 
         payload.write(client.id);
-        client.socket.send(payload.Buffer);
 
+        client.socket.send(payload.buffer);
         console.log(`Handshake packet send to client ${client.id}`);
     }
 }
