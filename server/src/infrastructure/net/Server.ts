@@ -16,22 +16,15 @@ import IPacketProcessor from '../../domain/net/packet/IPacketProcessor';
 @provide(types.Core.Domain.Net.IServer)
 export default class Server implements IServer {
     private server: WebSocket.Server | undefined;
-    public static readonly clients: Map<WebSocket, Client> = new Map();
-    private readonly clientPacketHandlerMap: Map<number, IClientPacketHandler> = new Map();
-    private readonly serverPacketHandlerMap: Map<number, IServerPacketHandler> = new Map();
-    
+    public static readonly clients: Map<WebSocket, Client> = new Map();    
     
     private lastId = 0;
 
     constructor(
         @unmanaged() private readonly PORT: number = 8080,
-        @multiInject(types.Core.Domain.Net.Packet.IClientPacketHandler) private readonly clientPacketHandlers: IClientPacketHandler[],
-        @multiInject(types.Core.Domain.Net.Packet.IServerPacketHandler) private readonly serverPacketHandlers: IServerPacketHandler[],
         @inject(types.Core.Domain.Net.Packet.IPacketDispatcher) public readonly packetDispatcher: IPacketDispatcher,
         @inject(types.Core.Domain.Net.Packet.IPacketProcessor) private readonly packetProcessor: IPacketProcessor
     ) {
-        this.clientPacketHandlers.forEach(handler => this.clientPacketHandlerMap.set(handler.id, handler));
-        this.serverPacketHandlers.forEach(handler => this.serverPacketHandlerMap.set(handler.id, handler));
 
     }
 
