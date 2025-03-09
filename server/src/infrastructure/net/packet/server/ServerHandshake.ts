@@ -9,7 +9,7 @@ import { inject } from "inversify";
 import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
-export default class Handshake implements IServerPacketHandler {
+export default class ServerHandshake implements IServerPacketHandler {
     id = ServerPacket.HANDSHAKE;
     
     constructor(

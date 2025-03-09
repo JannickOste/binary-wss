@@ -24,10 +24,8 @@ export default class Handshake implements IServerPacketHandler {
     {
         const payload = new Packet();
         payload.write(this.id)
-        console.log("buffer write?")
         payload.writeBuffer(Buffer.from(this.rsa.encrypt(client.serverAesKey, client.publicKey)))
 
-        console.log("yup written?")
         client.socket.send(payload.buffer);
     }
 }

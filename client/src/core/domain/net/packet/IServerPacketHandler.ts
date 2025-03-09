@@ -1,7 +1,8 @@
 import Packet from "./Packet";
 
-interface IPacketHandler {
+interface IServerPacketHandler {
+    id: number;
     handle(packet: Packet, ... data: unknown[]): Promise<void>;
 }
 
-export default IPacketHandler;
+export default IServerPacketHandler;

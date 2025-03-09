@@ -1,11 +1,12 @@
 import AES from "../../infrastructure/crypt/AES";
 import RSA from "../../infrastructure/crypt/RSA";
 import crypto from "crypto"
+import { WebSocket } from "ws";
 
 export default class Client {
-    public readonly cryptInterface: RSA = new RSA()
+    public cryptInterface: RSA = new RSA()
     public  serverAESKey: Buffer | undefined;
-    public readonly clientAESKey = crypto.randomBytes(32);
+    public clientAESKey = crypto.randomBytes(32);
 
     public get clientAES()
     {
@@ -18,9 +19,9 @@ export default class Client {
     }
 
     constructor(
-        private readonly id: number, 
-        private readonly socket: WebSocket,
-        public readonly serverKey: string
+        public socket: WebSocket,
+        public serverKey: string,
+        public id: number, 
     ) {
 
     }

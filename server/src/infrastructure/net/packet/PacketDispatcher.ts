@@ -24,7 +24,7 @@ export default class PacketDispatcher implements IPacketDispatcher {
         const packetHandler = this.clientPacketHandlerMap.get(id);
         if(packetHandler)
         {
-            console.log(`Dispatching packet handler with id: ${id}`)
+            console.log(`Sending packet to client ${client.id} with packet id: ${id}`)
             await packetHandler.handle(
                 client,
                 data

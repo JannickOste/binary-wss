@@ -1,6 +1,10 @@
-import App from "./App";
+
+import Kernel from "./core/infrastructure/Kernel";
+import WebSocketClient from "./core/infrastructure/net/WebSocketClient";
 
 (async() => {
-    console.log("Starting client...");  
-    App.main();
+    const kernel = new Kernel()
+
+    await kernel.init()
+    await kernel.start()
 })()

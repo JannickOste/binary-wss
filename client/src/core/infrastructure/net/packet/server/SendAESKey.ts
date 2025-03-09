@@ -1,21 +1,30 @@
-import App from "../../../../../App";
-import Client from "../../../../domain/net/Client";
 import Packet from "../../../../domain/net/packet/Packet";
-import IPacketHandler from "../../../../domain/net/packet/IPacketHandler";
-import ClientHandshake from "../client/Handshake"
+import IServerPacketHandler from "../../../../domain/net/packet/IServerPacketHandler";
+import ServerPacket from "../../../../domain/net/packet/server/ServerPacket";
+import types from "../../../../../di";
+import { inject } from "inversify";
+import Client from "../../../../domain/net/Client";
+import provide from "../../../../domain/decorators/provide";
 import HelloWorld from "../client/HelloWorld";
 
-export default class SendAESKey implements IPacketHandler
+export default class SendAESKey implements IServerPacketHandler
 { 
+    id = ServerPacket.SEND_AES_KEY;
+
+    constructor(
+        @inject(types.Core.Domain.Net.Client) private readonly client: Client 
+    ) {
+
+    }
+
     public async handle(
-        packet: Packet,
-        socket: WebSocket
+        packet: Packet
     ): Promise<void> 
     {
+        console.dir("aes")
         const serverAes = packet.readBuffer()
-        if(App.client)
-            App.client.serverAESKey = Buffer.from(App.client.cryptInterface.decrypt(serverAes))
+        if(this.client)
+            this.client.serverAESKey = Buffer.from(this.client.cryptInterface.decrypt(serverAes))
         
-        new HelloWorld().handle(packet, socket)
     }
 }

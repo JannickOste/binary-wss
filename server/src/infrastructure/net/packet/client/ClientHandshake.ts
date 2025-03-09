@@ -11,7 +11,7 @@ import IPacketDispatcher from "../../../../domain/net/packet/IPacketDispatcher";
 import ServerPacket from "../../../../domain/net/ServerPacket";
 
 @provide(types.Core.Domain.Net.Packet.IClientPacketHandler)
-export default class Handshake implements IClientPacketHandler {
+export default class ClientHandshake implements IClientPacketHandler {
     id = ClientPacket.HANDSHAKE;
 
     constructor(
@@ -25,8 +25,6 @@ export default class Handshake implements IClientPacketHandler {
     ): Promise<void> 
     {
         client.publicKey = packet.readString();    
-        client.clientAesKey = Buffer.from(this.rsaInterface.decrypt(packet.readBuffer()));
-
         
         await this.packetDispatcher.dispatchToClient(
             client,

@@ -32,6 +32,7 @@ const di_1 = __importDefault(require("../../di"));
 const inversify_1 = require("inversify");
 const inversify_2 = require("inversify");
 const provide_1 = __importDefault(require("../../domain/decorators/provide"));
+const RSA_1 = __importDefault(require("../crypt/RSA"));
 let Server = class Server {
     constructor(PORT = 8080, clientPacketHandlers, serverPacketHandlers) {
         this.PORT = PORT;
@@ -39,6 +40,12 @@ let Server = class Server {
         this.serverPacketHandlers = serverPacketHandlers;
         this.clients = new Map();
         this.lastId = 0;
+        const packet = new Packet_1.default({ id: 1 });
+        const rsa = new RSA_1.default();
+        packet.write(1);
+        const cryptedBuffer = rsa.encrypt(packet.buffer);
+        const secPacket = new Packet_1.default({ buffer: packet.buffer });
+        console.dir(secPacket.readNumber());
     }
     onClientConnect(socket) {
         var _a;
