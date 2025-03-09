@@ -1,5 +1,4 @@
 import { globSync } from "glob"
-import Server from "./net/Server";
 import types, { container } from "../di";
 import IServer from "../domain/net/IServer";
 
