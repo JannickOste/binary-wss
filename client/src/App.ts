@@ -1,9 +1,10 @@
-import Client from "./Client";
+import Client from "./core/domain/net/Client";
 import WebSocket from "ws";
-import Packet from "./Packet";
-import ServerPacket from "./packets/ServerPacket";
-import IPacketHandler from "./packets/IPacketHandler";
-import Handshake from "./packets/server/Handshake";
+import Packet from "./core/domain/net/packet/Packet";
+import ServerPacket from "./core/domain/net/packet/server/ServerPacket";
+import IPacketHandler from "./core/domain/net/packet/IPacketHandler";
+import Handshake from "./core/infrastructure/net/packet/server/Handshake";
+import SendAESKey from "./core/infrastructure/net/packet/server/SendAESKey";
 
 export default class App {
     public static client?: Client;
@@ -12,6 +13,7 @@ export default class App {
 
     public static main(): void {
         this.serverPacketHandlers.set(ServerPacket.HANDSHAKE, new Handshake());
+        this.serverPacketHandlers.set(ServerPacket.SEND_AES_KEY, new SendAESKey());
 
 
         this.socket = new WebSocket("ws://localhost:8080");

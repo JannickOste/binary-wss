@@ -1,4 +1,4 @@
-import Packet from "../Packet";
+import Packet from "./Packet";
 
 interface IPacketHandler {
     handle(packet: Packet, ... data: unknown[]): Promise<void>;

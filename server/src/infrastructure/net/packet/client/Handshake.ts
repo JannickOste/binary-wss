@@ -26,7 +26,8 @@ export default class Handshake implements IClientPacketHandler {
     {
         client.publicKey = packet.readString();    
         client.clientAesKey = Buffer.from(this.rsaInterface.decrypt(packet.readBuffer()));
-        console.dir(client.clientAesKey)
+
+        
         await this.packetDispatcher.dispatchToClient(
             client,
             ServerPacket.SEND_RSA_KEY

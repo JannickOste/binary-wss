@@ -78,13 +78,14 @@ export default class Packet {
         return value;
     }
 
-    public readNumber = (littleEndian: boolean = true) => this.readFloat32(littleEndian);
-
     public writeFloat64(value: number, littleEndian: boolean = true): void {
         this.dataview.setFloat64(this.offset, value, littleEndian);
         this.offset += 8;
     }
     
+
+    public readNumber = (littleEndian: boolean = true) => this.readFloat32(littleEndian);
+
     public writeBoolean(value: boolean): void {
         this.dataview.setUint8(this.offset, value ? 1 : 0);
         this.offset++;
@@ -97,29 +98,39 @@ export default class Packet {
         return value === 1;
     }
 
+    public writeBuffer(value: Buffer): void 
+    {
+        this.writeInt(value.byteLength);
+        for(const byte of value)
+        {
+            this.writeByte(byte);
+        }
+    }
+
+    public readBuffer(): Uint8Array
+    {
+        const length = this.readInt();
+        const buffer = new Uint8Array(length)
+        for(let index = 0; index < length; index++)
+        {
+            const currentByte = this.readByte();
+            buffer[index] = currentByte;
+        }
+
+        return buffer;
+    }
+
     public writeString(value: string): void {
         const encoder = new TextEncoder();
         const encoded = encoder.encode(value);
 
-        this.writeInt(encoded.length);
-
-        for (const byte of encoded) {
-            this.dataview.setUint8(this.offset, byte);
-            this.offset++;
-        }
+        this.writeBuffer(Buffer.from(encoded.buffer))
     }
 
     public readString(): string {
-        const length = this.readInt();
-        console.log(length)
-        const bytes = new Uint8Array(length);
-        for (let i = 0; i < length; i++) {
-            bytes[i] = this.dataview.getUint8(this.offset);
-            this.offset++;
-        }
-
         const decoder = new TextDecoder();
-        return decoder.decode(bytes);
+        
+        return decoder.decode(this.readBuffer());
     }
 
     public write(numeric: number, littleEndian?: boolean): void;

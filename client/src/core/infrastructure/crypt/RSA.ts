@@ -1,6 +1,7 @@
 import forge from "node-forge";
+import IRSAInterface from "../../domain/crypt/IRSAInterface";
 
-class RSA {
+export default class RSA implements IRSAInterface {
     constructor(
         private readonly keyPair: forge.pki.rsa.KeyPair = forge.pki.rsa.generateKeyPair(4096)
     ) {}
@@ -32,4 +33,3 @@ class RSA {
     }
 }
 
-export default RSA;

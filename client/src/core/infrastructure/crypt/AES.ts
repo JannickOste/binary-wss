@@ -1,6 +1,7 @@
 import crypto from "crypto";
+import IAESInterface from "../../domain/crypt/IAESInterface";
 
-class AES {
+export default class AES implements IAESInterface {
     constructor(
         private readonly key: Buffer
     ) {
@@ -31,5 +32,3 @@ class AES {
         return decrypted.toString();
     }
 }
-
-export default AES;
