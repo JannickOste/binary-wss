@@ -21,10 +21,15 @@ export default class PacketDispatcher implements IPacketDispatcher {
     }
 
     public async dispatchToClient(client: Client, id: ServerPacket, ... data: unknown[]): Promise<void> {
-        await this.clientPacketHandlerMap.get(id)?.handle(
-            client,
-            data
-        );
+        const packetHandler = this.clientPacketHandlerMap.get(id);
+        if(packetHandler)
+        {
+            console.log(`Dispatching packet handler with id: ${id}`)
+            await packetHandler.handle(
+                client,
+                data
+            );
+        } else console.log(`Packet handler with id: ${id} not found`)
     }
 
     public async dispatchToAll(id: ServerPacket, ... data: unknown[]): Promise<void> {
