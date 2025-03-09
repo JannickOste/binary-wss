@@ -16,7 +16,8 @@ const types = {
                 IServer: Symbol.for("Core/Domain/Net/IServer")
             },
             Crypt: {
-                IRSAInterface: Symbol.for("Core/Domain/Crypt/IRSAInterface")
+                IRSAInterface: Symbol.for("Core/Domain/Crypt/IRSAInterface"),
+                IAESInterface: Symbol.for("Core/Domain/Crypt/IAESInterface"),
             }
         }
     }
