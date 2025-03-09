@@ -5,20 +5,29 @@ import IServerPacketHandler from "../../../../domain/net/packet/IServerPacketHan
 import ServerPacket from "../../../../domain/net/ServerPacket";
 import types from "../../../../di";
 import provide from "../../../../domain/decorators/provide";
+import { inject } from "inversify";
+import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
 export default class Handshake implements IServerPacketHandler {
     id = ServerPacket.HANDSHAKE;
+    
+    constructor(
+        @inject(types.Core.Domain.Crypt.IRSAInterface) private readonly rsa: IRSAInterface
+    ) {
+
+    }
 
     public async handle(
         client: Client
     ): Promise<void> 
     {
-        const payload = new Packet({id: ClientPacket.HANDSHAKE});
+        const payload = new Packet();
 
+        payload.write(this.id)
         payload.write(client.id);
+        payload.write(this.rsa.publicKey)
 
         client.socket.send(payload.buffer);
-        console.log(`Handshake packet send to client ${client.id}`);
     }
 }
