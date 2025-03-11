@@ -24,7 +24,7 @@ export default class ClientHandshake implements IClientPacketHandler {
         packet: Packet
     ): Promise<void> 
     {
-        client.publicKey = packet.readString();    
+        client.publicKey = packet.readString();  
         
         await this.packetDispatcher.dispatchToClient(
             client,

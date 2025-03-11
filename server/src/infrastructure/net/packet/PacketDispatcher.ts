@@ -12,16 +12,16 @@ import IPacketDispatcher from "../../../domain/net/packet/IPacketDispatcher";
 
 @provide(types.Core.Domain.Net.Packet.IPacketDispatcher)
 export default class PacketDispatcher implements IPacketDispatcher {
-    private readonly clientPacketHandlerMap: Map<number, IServerPacketHandler> = new Map();
+    private readonly serverPacketHandlerMap: Map<ServerPacket, IServerPacketHandler> = new Map();
 
     constructor(
-        @multiInject(types.Core.Domain.Net.Packet.IServerPacketHandler) private readonly clientPacketHandlers: IServerPacketHandler[],
+        @multiInject(types.Core.Domain.Net.Packet.IServerPacketHandler) serverPacketHandlers: IServerPacketHandler[],
     ) {
-        this.clientPacketHandlers.forEach(handler => this.clientPacketHandlerMap.set(handler.id, handler));
+        serverPacketHandlers.forEach(handler => this.serverPacketHandlerMap.set(handler.id, handler));
     }
 
     public async dispatchToClient(client: Client, id: ServerPacket, ... data: unknown[]): Promise<void> {
-        const packetHandler = this.clientPacketHandlerMap.get(id);
+        const packetHandler = this.serverPacketHandlerMap.get(id);
         if(packetHandler)
         {
             console.log(`Sending packet to client ${client.id} with packet id: ${id}`)

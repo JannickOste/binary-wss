@@ -22,7 +22,7 @@ export default class Server implements IServer {
 
     constructor(
         @unmanaged() private readonly PORT: number = 8080,
-        @inject(types.Core.Domain.Net.Packet.IPacketDispatcher) public readonly packetDispatcher: IPacketDispatcher,
+        @inject(types.Core.Domain.Net.Packet.IPacketDispatcher) private readonly packetDispatcher: IPacketDispatcher,
         @inject(types.Core.Domain.Net.Packet.IPacketProcessor) private readonly packetProcessor: IPacketProcessor
     ) {
 

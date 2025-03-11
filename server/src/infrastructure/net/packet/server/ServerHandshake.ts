@@ -22,11 +22,12 @@ export default class ServerHandshake implements IServerPacketHandler {
         client: Client
     ): Promise<void> 
     {
-        const payload = new Packet();
-
-        payload.write(this.id)
+        const payload = new Packet({
+            id: this.id
+        });
+        
         payload.write(client.id);
-        payload.write(this.rsa.publicKey)
+        payload.write(this.rsa.publicKey);
 
         client.socket.send(payload.buffer);
     }

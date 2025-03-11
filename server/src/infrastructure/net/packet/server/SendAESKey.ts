@@ -22,9 +22,18 @@ export default class Handshake implements IServerPacketHandler {
         client: Client
     ): Promise<void> 
     {
-        const payload = new Packet();
-        payload.write(this.id)
-        payload.writeBuffer(Buffer.from(this.rsa.encrypt(client.serverAesKey, client.publicKey)))
+        const payload = new Packet({
+            id: this.id
+        });
+
+        const encryptedServerAES = this.rsa.encrypt(
+            client.serverAesKey, 
+            client.publicKey
+        )
+        
+        payload.writeBuffer(
+            Buffer.from(encryptedServerAES)
+        );
 
         client.socket.send(payload.buffer);
     }
