@@ -19,11 +19,12 @@ export default class ClientHandshake implements IClientPacketHandler
     public async handle(
     ): Promise<void> 
     {
-        const packet = new Packet();
-        packet.write(ClientPacket.HANDSHAKE)
+        const packet = new Packet({
+            id: ClientPacket.HANDSHAKE
+        });
+        
         packet.write(this.client.cryptInterface.publicKey ?? "")
         
         this.client.socket.send(packet.buffer)
-    
     }
 }

@@ -16,7 +16,6 @@ export default class ServerHandshake implements IServerPacketHandler
     id = ServerPacket.HANDSHAKE;
 
     constructor(
-        @inject(types.Core.Domain.Net.Client) private readonly client: Client,
         @inject(types.Core.Domain.Net.Packet.IPacketDispatcher) private readonly dispatcher: IPacketDispatcher,
     ) {
 
@@ -25,12 +24,14 @@ export default class ServerHandshake implements IServerPacketHandler
     public async handle(
     ): Promise<void> 
     {
+        const client = container.get<Client>(types.Core.Domain.Net.Client);
         const packet = new Packet();
-        const id = packet.readNumber();
+        const clientId = packet.readNumber();
         const publicKey = packet.readString();
-        this.client.id = id;
-        this.client.serverKey = publicKey;
 
+        client.id = clientId;
+        client.serverRSAKey = publicKey;
+    
         await this.dispatcher.dispatchToServer(
             ClientPacket.HANDSHAKE
         )

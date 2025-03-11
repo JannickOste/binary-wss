@@ -15,9 +15,8 @@ export default class WebSocketClient implements IWebSocketClient {
     }
 
     public async connect(): Promise<void> {
-        const socket = new WebSocket("ws://localhost:8080");
-        socket.binaryType = "arraybuffer";
-        socket.on("message", this.onPacketReceived.bind(this));
+        this.client.socket.binaryType = "arraybuffer";
+        this.client.socket.on("message", this.onPacketReceived.bind(this));
         console.log("client connected...")
     }
 

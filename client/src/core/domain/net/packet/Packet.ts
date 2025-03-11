@@ -16,12 +16,11 @@ export default class Packet {
         {buffer, id}: PacketProps = {}
     ) {
         this.dataview = new DataView((buffer ?? new Uint8Array(Packet.MAX_PACKET_SIZE)).buffer);
-
-        if(id)
+        
+        if(typeof id === "number")
         {
             this.writeFloat32(id);
         }
-
     }
 
     public writeByte(value: number): void 

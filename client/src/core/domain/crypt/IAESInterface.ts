@@ -1,8 +1,8 @@
 
 interface IAESInterface 
 { 
-    encrypt(data: string | Buffer): { encrypted: string; iv: string };
-    decrypt(encryptedHex: string, ivHex: string): string;
+    encrypt(data: Buffer): { encrypted: Buffer; iv: Buffer };
+    decrypt(encryptedHex: Buffer, ivHex: Buffer): Buffer;
 }
 
 export default IAESInterface;

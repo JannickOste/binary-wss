@@ -20,7 +20,7 @@ export default class Client {
 
     constructor(
         public socket: WebSocket,
-        public serverKey: string,
+        public serverRSAKey: string,
         public id: number, 
     ) {
 

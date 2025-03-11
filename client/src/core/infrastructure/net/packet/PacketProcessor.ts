@@ -30,6 +30,6 @@ export default class PacketProcessor implements IPacketProcessor
         if (packetHandler) {
             packetHandler.handle(receivedPacket);
             return;
-        } 
+        } else console.log("No packet handler found")
     }
 }
