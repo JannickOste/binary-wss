@@ -6,16 +6,16 @@ import Packet from "../../../domain/net/packet/Packet";
 import Client from "../../../domain/net/Client";
 import WebSocket from "ws";
 import Server from "../Server";
-import IServerPacketHandler from "../../../domain/net/packet/IServerPacketHandler";
+import IServerPacketBuilder from "../../../domain/net/packet/IServerPacketBuilder";
 import provide from "../../../domain/decorators/provide";
 import IPacketDispatcher from "../../../domain/net/packet/IPacketDispatcher";
 
 @provide(types.Core.Domain.Net.Packet.IPacketDispatcher)
 export default class PacketDispatcher implements IPacketDispatcher {
-    private readonly serverPacketHandlerMap: Map<ServerPacket, IServerPacketHandler> = new Map();
+    private readonly serverPacketHandlerMap: Map<ServerPacket, IServerPacketBuilder> = new Map();
 
     constructor(
-        @multiInject(types.Core.Domain.Net.Packet.IServerPacketHandler) serverPacketHandlers: IServerPacketHandler[],
+        @multiInject(types.Core.Domain.Net.Packet.IServerPacketHandler) serverPacketHandlers: IServerPacketBuilder[],
     ) {
         serverPacketHandlers.forEach(handler => this.serverPacketHandlerMap.set(handler.id, handler));
     }
@@ -25,10 +25,12 @@ export default class PacketDispatcher implements IPacketDispatcher {
         if(packetHandler)
         {
             console.log(`Sending packet to client ${client.id} with packet id: ${id}`)
-            await packetHandler.handle(
+            const payload = await packetHandler.build(
                 client,
                 data
             );
+
+            client.socket.send(payload.buffer);
         } else console.log(`Packet handler with id: ${id} not found`)
     }
 

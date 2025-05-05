@@ -3,7 +3,7 @@ import Packet from '../../domain/net/packet/Packet';
 import Client from '../../domain/net/Client';
 import ServerPacket from '../../domain/net/ServerPacket';
 import IClientPacketHandler from '../../domain/net/packet/IClientPacketHandler';
-import IServerPacketHandler from '../../domain/net/packet/IServerPacketHandler';
+import IServerPacketBuilder from '../../domain/net/packet/IServerPacketBuilder';
 import types from '../../di';
 import { multiInject } from 'inversify';
 import { unmanaged } from 'inversify';
