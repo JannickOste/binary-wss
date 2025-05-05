@@ -1,18 +1,18 @@
 import Client from "../../../../domain/net/Client";
 import Packet from "../../../../domain/net/packet/Packet";
 import ClientPacket from "../../../../domain/net/packet/client/ClientPacket";
-import IClientPacketHandler from "../../../../domain/net/packet/IClientPacketHandler";
+import IClientPacketBuilder from "../../../../domain/net/packet/IClientPacketBuilder";
 import types, { container } from "../../../../../di";
 import provide from "../../../../domain/decorators/provide";
 import { inject } from "inversify";
 
 @provide(types.Core.Domain.Net.Packet.IClientPacketHandler)
-export default class HelloWorld implements IClientPacketHandler
+export default class SendAESKey implements IClientPacketBuilder
 { 
     id = ClientPacket.HELLO_WORLD;
 
     public async handle(
-    ): Promise<void> 
+    ): Promise<Packet> 
     {
         const client = container.get<Client>(types.Core.Domain.Net.Client);
         const packet = new Packet({
@@ -26,6 +26,6 @@ export default class HelloWorld implements IClientPacketHandler
         
         packet.writeBuffer(Buffer.from(clientAesKeyEncrypted))
 
-        client.socket.send(packet.buffer)
+        return packet;
     }
 }
