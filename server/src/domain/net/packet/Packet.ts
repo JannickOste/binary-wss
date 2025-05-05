@@ -9,7 +9,7 @@ export default class Packet {
     private offset: number = 0;
     private readonly dataview: DataView;
     public get buffer(): Uint8Array {
-        return new Uint8Array(this.dataview.buffer);
+        return new Uint8Array(this.dataview.buffer, 0, this.offset);
     }
     
     constructor(
