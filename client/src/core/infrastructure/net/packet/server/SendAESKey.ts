@@ -30,7 +30,7 @@ export default class SendAESKey implements IServerPacketHandler
         this.client.serverAESKey = Buffer.from(serverAes);
         
         await this.dispatcher.dispatchToServer(
-            ClientPacket.HELLO_WORLD
+            ClientPacket.SEND_AES_KEY
         )
     }
 }

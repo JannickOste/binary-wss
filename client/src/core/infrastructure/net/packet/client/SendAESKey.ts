@@ -9,14 +9,14 @@ import { inject } from "inversify";
 @provide(types.Core.Domain.Net.Packet.IClientPacketHandler)
 export default class SendAESKey implements IClientPacketBuilder
 { 
-    id = ClientPacket.HELLO_WORLD;
+    id = ClientPacket.SEND_AES_KEY;
 
     public async handle(
     ): Promise<Packet> 
     {
         const client = container.get<Client>(types.Core.Domain.Net.Client);
         const packet = new Packet({
-            id: ClientPacket.HELLO_WORLD
+            id: ClientPacket.SEND_AES_KEY
         });
 
         const clientAesKeyEncrypted = client.cryptInterface.encrypt(

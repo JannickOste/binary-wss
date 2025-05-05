@@ -7,9 +7,9 @@ import types from "../../../../../di";
 import { inject } from "inversify";
 
 @provide(types.Core.Domain.Net.Packet.IClientPacketHandler)
-export default class ClientHandshake implements IClientPacketBuilder
+export default class SendRSAKey implements IClientPacketBuilder
 { 
-    id = ClientPacket.HANDSHAKE;
+    id = ClientPacket.SEND_RSA_KEY;
 
     constructor(
         @inject(types.Core.Domain.Net.Client) private readonly client: Client 
@@ -20,7 +20,7 @@ export default class ClientHandshake implements IClientPacketBuilder
     ): Promise<Packet> 
     {
         const packet = new Packet({
-            id: ClientPacket.HANDSHAKE
+            id: ClientPacket.SEND_RSA_KEY
         });
         
         packet.write(this.client.cryptInterface.publicKey ?? "")
