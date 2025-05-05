@@ -39,7 +39,7 @@ export default class Server implements IServer {
 
         await this.packetDispatcher.dispatchToClient(
             client,
-            ServerPacket.HANDSHAKE
+            ServerPacket.SEND_RSA_KEY
         )
     }
 

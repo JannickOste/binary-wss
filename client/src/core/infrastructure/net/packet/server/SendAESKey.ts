@@ -5,7 +5,7 @@ import types from "../../../../../di";
 import { inject } from "inversify";
 import Client from "../../../../domain/net/Client";
 import provide from "../../../../domain/decorators/provide";
-import HelloWorld from "../client/HelloWorld";
+import HelloWorld from "../client/SendAESKey";
 import IPacketDispatcher from "../../../../domain/net/packet/IPacketDispatcher";
 import ClientPacket from "../../../../domain/net/packet/client/ClientPacket";
 

@@ -7,7 +7,7 @@ import types, { container } from "../../../../../di";
 import ClientPacket from "../../../../domain/net/packet/client/ClientPacket";
 import provide from "../../../../domain/decorators/provide";
 import PacketDispatcher from "../PacketDispatcher";
-import ClientHandshake from "../client/ClientHandshake";
+import ClientHandshake from "../client/SendRSAKey";
 import IPacketDispatcher from "../../../../domain/net/packet/IPacketDispatcher";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
@@ -22,14 +22,13 @@ export default class ServerHandshake implements IServerPacketHandler
     }
 
     public async handle(
+        packet: Packet
     ): Promise<void> 
     {
         const client = container.get<Client>(types.Core.Domain.Net.Client);
-        const packet = new Packet();
-        const clientId = packet.readNumber();
+
         const publicKey = packet.readString();
 
-        client.id = clientId;
         client.serverRSAKey = publicKey;
     
         await this.dispatcher.dispatchToServer(

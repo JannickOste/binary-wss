@@ -9,8 +9,8 @@ import { inject } from "inversify";
 import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
-export default class ServerHandshake implements IServerPacketHandler {
-    id = ServerPacket.HANDSHAKE;
+export default class SendRSAKey implements IServerPacketHandler {
+    id = ServerPacket.SEND_RSA_KEY;
     
     constructor(
         @inject(types.Core.Domain.Crypt.IRSAInterface) private readonly rsa: IRSAInterface
@@ -26,7 +26,7 @@ export default class ServerHandshake implements IServerPacketHandler {
             id: this.id
         });
         
-        payload.write(client.id);
+        console.log(`Sending RSA key to client ${client.id}`)
         payload.write(this.rsa.publicKey);
 
         client.socket.send(payload.buffer);

@@ -10,7 +10,7 @@ import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
 export default class Handshake implements IServerPacketHandler {
-    id = ServerPacket.SEND_RSA_KEY;
+    id = ServerPacket.SEND_AES_KEY;
     
     constructor(
         @inject(types.Core.Domain.Crypt.IRSAInterface) private readonly rsa: IRSAInterface

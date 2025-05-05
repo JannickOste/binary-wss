@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node dist",
-    "start:dev": "ts-node src",
+    "start:dev": "ts-node-dev src",
     "publish": "tsc",
     "test": "npx jest",
     "test:watch": "jest --watch",
