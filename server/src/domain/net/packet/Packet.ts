@@ -19,16 +19,20 @@ export default class Packet {
         
         if(typeof id === "number")
         {
-            this.writeFloat32(id);
+            this.write(id);
+        }
+    }
+
+    private assertBufferSize(size: number): void { 
+
+        if (this.offset + size > Packet.MAX_PACKET_SIZE) {
+            throw new Error("Packet size exceeds the maximum allowed size");
         }
     }
 
     public writeByte(value: number): void 
     {
-        if (this.offset + 1 > Packet.MAX_PACKET_SIZE) {
-            throw new Error("Packet size exceeds the maximum allowed size");
-        }
-
+        this.assertBufferSize(1);
         this.dataview.setInt8(this.offset, value);
         this.offset++;
     }
@@ -42,6 +46,8 @@ export default class Packet {
     }
 
     public writeShort(value: number, littleEndian: boolean = true): void {
+        this.assertBufferSize(2);
+
         this.dataview.setInt16(this.offset, value, littleEndian);
         this.offset += 2;
     }
@@ -54,6 +60,8 @@ export default class Packet {
     }
 
     public writeInt(value: number, littleEndian: boolean = true): void {
+        this.assertBufferSize(4);
+        
         this.dataview.setInt32(this.offset, value, littleEndian);
         this.offset += 4;
     }
@@ -66,6 +74,8 @@ export default class Packet {
     }
 
     public writeFloat32(value: number, littleEndian: boolean = true): void {
+        this.assertBufferSize(4);
+
         this.dataview.setFloat32(this.offset, value, littleEndian);
         this.offset += 4;
     }
@@ -78,6 +88,8 @@ export default class Packet {
     }
 
     public writeFloat64(value: number, littleEndian: boolean = true): void {
+        this.assertBufferSize(8);
+
         this.dataview.setFloat64(this.offset, value, littleEndian);
         this.offset += 8;
     }
@@ -86,6 +98,8 @@ export default class Packet {
     public readNumber = (littleEndian: boolean = true) => this.readFloat32(littleEndian);
 
     public writeBoolean(value: boolean): void {
+        this.assertBufferSize(1);
+
         this.dataview.setUint8(this.offset, value ? 1 : 0);
         this.offset++;
     }
@@ -99,6 +113,8 @@ export default class Packet {
 
     public writeBuffer(value: Buffer): void 
     {
+        this.assertBufferSize(value.byteLength + 4);
+
         this.writeInt(value.byteLength);
         for(const byte of value)
         {
