@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { Container } from "inversify";
+import AES from './core/infrastructure/crypt/AES';
 
 export const container = new Container();
 
@@ -19,7 +20,16 @@ const types = {
             Crypt: {
                 IRSAInterface: Symbol.for("Core/Domain/Crypt/IRSAInterface"),
                 IAESInterface: Symbol.for("Core/Domain/Crypt/IAESInterface"),
+                Manager: {
+                    IEncryptionManager: Symbol.for("Core/Domain/Crypt/Manager/IEncryptionManager"),
+                }
             }
+        }
+    },
+    Client: {
+        Crypt: {
+            AES: Symbol.for("Client/Crypt/AES"),
+            RSA: Symbol.for("Client/Crypt/RSA"),
         }
     }
 }

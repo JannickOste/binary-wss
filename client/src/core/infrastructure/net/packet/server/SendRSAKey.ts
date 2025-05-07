@@ -8,6 +8,7 @@ import ClientPacket from "../../../../domain/net/packet/client/ClientPacket";
 import provide from "../../../../domain/decorators/provide";
 import PacketDispatcher from "../PacketDispatcher";
 import IPacketDispatcher from "../../../../domain/net/packet/IPacketDispatcher";
+import EncryptionManager from "../../../crypt/manager/EncryptionManager";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
 export default class SendRSAKey implements IServerPacketHandler
@@ -15,6 +16,7 @@ export default class SendRSAKey implements IServerPacketHandler
     id = ServerPacket.SEND_RSA_KEY;
 
     constructor(
+        @inject(types.Core.Domain.Crypt.Manager.IEncryptionManager) private readonly encryptionManager: EncryptionManager, 
         @inject(types.Core.Domain.Net.Packet.IPacketDispatcher) private readonly dispatcher: IPacketDispatcher,
     ) {
 
@@ -24,11 +26,8 @@ export default class SendRSAKey implements IServerPacketHandler
         packet: Packet
     ): Promise<void> 
     {
-        const client = container.get<Client>(types.Core.Domain.Net.Client);
-
         const publicKey = packet.readString();
-
-        client.serverRSAKey = publicKey;
+        this.encryptionManager.setServerRSAKey(publicKey);
     
         await this.dispatcher.dispatchToServer(
             ClientPacket.SEND_RSA_KEY

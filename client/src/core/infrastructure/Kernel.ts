@@ -16,7 +16,7 @@ export default class Kernel
 
         
         container.bind(types.Core.Domain.Net.Client).toConstantValue(
-            new Client(new WebSocket("ws://localhost:8080"), "", -1)
+            new Client(new WebSocket("ws://localhost:8080"), -1)
         );
     }
 

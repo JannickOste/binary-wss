@@ -1,6 +1,10 @@
 import forge from "node-forge";
 import IRSAInterface from "../../domain/crypt/IRSAInterface";
+import provide from "../../domain/decorators/provide";
+import types from "../../../di";
+import { bindingScopeValues } from "inversify";
 
+@provide(types.Client.Crypt.RSA, bindingScopeValues.Singleton)
 export default class RSA implements IRSAInterface {
     constructor(
         private readonly keyPair: forge.pki.rsa.KeyPair = forge.pki.rsa.generateKeyPair(4096)

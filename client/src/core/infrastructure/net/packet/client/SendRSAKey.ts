@@ -3,29 +3,33 @@ import Packet from "../../../../domain/net/packet/Packet";
 import ClientPacket from "../../../../domain/net/packet/client/ClientPacket";
 import IClientPacketBuilder from "../../../../domain/net/packet/IClientPacketBuilder";
 import provide from "../../../../domain/decorators/provide";
-import types from "../../../../../di";
+import types, { container } from "../../../../../di";
 import { inject } from "inversify";
+import EncryptionFlag from "../../../../domain/crypt/EncryptionFlag";
+import forge from "node-forge";
+import EncryptionManager from "../../../crypt/manager/EncryptionManager";
 
 @provide(types.Core.Domain.Net.Packet.IClientPacketHandler)
-export default class SendRSAKey implements IClientPacketBuilder
+export default class SendRSAKey extends Packet implements IClientPacketBuilder 
 { 
     id = ClientPacket.SEND_RSA_KEY;
 
     constructor(
-        @inject(types.Core.Domain.Net.Client) private readonly client: Client 
+        @inject(types.Core.Domain.Crypt.Manager.IEncryptionManager) private readonly encryptionManager: EncryptionManager 
     ) {
-
+        super({
+            id: ClientPacket.SEND_RSA_KEY,
+            encryption: EncryptionFlag.NONE
+        })
     }
+
     public async handle(
     ): Promise<Packet> 
-    {
-        const packet = new Packet({
-            id: ClientPacket.SEND_RSA_KEY
-        });
+    {        
+        const key = this.encryptionManager.getKey(EncryptionFlag.RSA);
         
-        packet.write(this.client.cryptInterface.publicKey ?? "")
-        
-        
-        return packet;
+        this.writeBuffer(key);
+
+        return this;
     }
 }
