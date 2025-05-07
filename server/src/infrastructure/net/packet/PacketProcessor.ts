@@ -26,8 +26,9 @@ export default class PacketProcessor implements IPacketProcessor
     ) {
         const packet = new Packet({ buffer: new Uint8Array(data as ArrayBuffer) });
         const id = packet.readNumber();
+        const encryption = packet.readNumber();
         
-        console.log(`Packet received with id: ${id}`)
+        console.log(`Packet received with id: ${id}, encryption: ${encryption}`)    
         const packetHandler = this.clientPacketHandlerMap.get(id);
         if (packetHandler) {
             packetHandler.handle(client, packet);

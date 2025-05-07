@@ -4,12 +4,13 @@ import AES from "../../infrastructure/crypt/AES";
 
 export default class Client 
 {
-    public publicKey: string = "";
-    public clientAesKey: Buffer | undefined ;
+    public clientRSAKey: string = "";
+    public clientAESKey: Buffer | undefined ;
     public readonly serverAesKey: Buffer = crypto.randomBytes(32);
+
     public get clientAes()
     {
-        return new AES(this.clientAesKey ?? Buffer.from([]));
+        return new AES(this.clientAESKey ?? Buffer.from([]));
     }
 
     constructor(

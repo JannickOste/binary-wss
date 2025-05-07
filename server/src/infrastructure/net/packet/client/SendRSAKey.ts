@@ -5,10 +5,10 @@ import Client from "../../../../domain/net/Client";
 import ClientPacket from "../../../../domain/net/ClientPacket";
 import IClientPacketHandler from "../../../../domain/net/packet/IClientPacketHandler";
 import Packet from "../../../../domain/net/packet/Packet";
-import Server from "../../Server";
 import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
 import IPacketDispatcher from "../../../../domain/net/packet/IPacketDispatcher";
 import ServerPacket from "../../../../domain/net/ServerPacket";
+import { createPublicKey } from "crypto";
 
 @provide(types.Core.Domain.Net.Packet.IClientPacketHandler)
 export default class ClientHandshake implements IClientPacketHandler {
@@ -24,8 +24,19 @@ export default class ClientHandshake implements IClientPacketHandler {
         packet: Packet
     ): Promise<void> 
     {
-        client.publicKey = packet.readString();  
-        
+        const data = packet.readBuffer();
+        const decoder = new TextDecoder();
+        try 
+        {
+            createPublicKey(decoder.decode(data));
+        } catch (e) 
+        {
+            client.socket.terminate();
+            return;
+        }
+
+        client.clientRSAKey = decoder.decode(data);
+
         await this.packetDispatcher.dispatchToClient(
             client,
             ServerPacket.SEND_AES_KEY

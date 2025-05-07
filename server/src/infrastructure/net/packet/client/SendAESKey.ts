@@ -25,6 +25,6 @@ export default class HelloWorld implements IClientPacketHandler {
     {
         console.log("Decrypting client AES key")
         const clientAesKeyEncrypted = packet.readBuffer();
-        client.clientAesKey = Buffer.from(this.rsaInterface.decrypt(clientAesKeyEncrypted))
+        client.clientAESKey = Buffer.from(this.rsaInterface.decrypt(clientAesKeyEncrypted))
     }
 }

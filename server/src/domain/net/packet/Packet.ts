@@ -1,25 +1,35 @@
+import EncryptionFlag from "../../crypt/EncryptionFlag";
+
 export interface PacketProps {
     buffer?: Uint8Array;
     id?: number;
+    encryption?: EncryptionFlag;
 }
 
 export default class Packet {
     public static readonly MAX_PACKET_SIZE = 4096;
 
     private offset: number = 0;
+    public get currentOffset(): number {    
+        return this.offset;
+    }
+    
     private readonly dataview: DataView;
     public get buffer(): Uint8Array {
         return new Uint8Array(this.dataview.buffer, 0, this.offset);
     }
+
+    public readonly encryption: EncryptionFlag = EncryptionFlag.AES;
     
     constructor(
-        {buffer, id}: PacketProps = {}
+        {buffer, id, encryption}: PacketProps = {}
     ) {
         this.dataview = new DataView((buffer ?? new Uint8Array(Packet.MAX_PACKET_SIZE)).buffer);
         
         if(typeof id === "number")
         {
             this.write(id);
+            this.write((this.encryption = encryption ?? EncryptionFlag.AES));
         }
     }
 

@@ -7,6 +7,7 @@ import types from "../../../../di";
 import provide from "../../../../domain/decorators/provide";
 import { inject } from "inversify";
 import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
+import EncryptionFlag from "../../../../domain/crypt/EncryptionFlag";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
 export default class Handshake implements IServerPacketBuilder {
@@ -23,12 +24,13 @@ export default class Handshake implements IServerPacketBuilder {
     ): Promise<Packet> 
     {
         const payload = new Packet({
-            id: this.id
+            id: this.id,
+            encryption: EncryptionFlag.RSA
         });
 
         const encryptedServerAES = this.rsa.encrypt(
             client.serverAesKey, 
-            client.publicKey
+            client.clientRSAKey
         )
         
         payload.writeBuffer(

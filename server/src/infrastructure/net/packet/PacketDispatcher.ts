@@ -24,12 +24,12 @@ export default class PacketDispatcher implements IPacketDispatcher {
         const packetHandler = this.serverPacketHandlerMap.get(id);
         if(packetHandler)
         {
-            console.log(`Sending packet to client ${client.id} with packet id: ${id}`)
             const payload = await packetHandler.build(
                 client,
                 data
             );
 
+            console.log(`Sending packet to client ${client.id} with packet id: ${id} and encryption: ${payload.encryption}`)
             client.socket.send(payload.buffer);
         } else console.log(`Packet handler with id: ${id} not found`)
     }

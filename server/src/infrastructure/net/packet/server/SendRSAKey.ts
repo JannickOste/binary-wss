@@ -7,6 +7,7 @@ import types from "../../../../di";
 import provide from "../../../../domain/decorators/provide";
 import { inject } from "inversify";
 import IRSAInterface from "../../../../domain/crypt/IRSAInterface";
+import EncryptionFlag from "../../../../domain/crypt/EncryptionFlag";
 
 @provide(types.Core.Domain.Net.Packet.IServerPacketHandler)
 export default class SendRSAKey implements IServerPacketBuilder {
@@ -19,11 +20,11 @@ export default class SendRSAKey implements IServerPacketBuilder {
     }
 
     public async build(
-        client: Client
     ): Promise<Packet> 
     {
         const payload = new Packet({
-            id: this.id
+            id: this.id,
+            encryption: EncryptionFlag.NONE
         });
         
         payload.write(this.rsa.publicKey);
